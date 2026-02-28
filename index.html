@@ -4,133 +4,60 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control de Conchitas</title>
-
 <style>
-*{ box-sizing:border-box; }
-
 body{
     font-family: Arial;
     margin:0;
-    background:#89CFF0;
+    background:#f4f4f4;
 }
-
-.banner{
-    width:100%;
-    height:200px;
-    overflow:hidden;
-}
-.banner video{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
 nav{
-    background:#6495ED;
+    background:#ff9800;
     padding:10px;
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
-
 nav button{
-    flex:1 1 45%;
-    padding:12px;
-    font-size:14px;
-    background:#00BFFF;
-    color:white;
-    border:none;
-    border-radius:8px;
+    margin:5px;
+    padding:10px;
+    cursor: pointer;
 }
-
 section{
     display:none;
-    padding:15px;
-    background:white;
-    margin:10px;
-    border-radius:12px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    padding:20px;
+    background: white;
+    margin: 10px;
+    border-radius: 8px;
 }
-.active{ display:block; }
-
-input, select{
-    width:100%;
-    padding:12px;
-    margin:6px 0;
-    border:1px solid #89CFF0;
-    border-radius:8px;
-    font-size:16px;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    margin:6px 0;
-    background:#00BFFF;
-    color:white;
-    border:none;
-    border-radius:8px;
-    font-size:16px;
-    cursor:pointer;
-}
-
-.btn-mini{
-    width:auto;
-    padding:5px 8px;
-    font-size:14px;
-    margin:2px;
-}
-
-.papelera{ background:#c62828; }
-
-.pagado{ color:MediumBlue; font-weight:bold; }
-.noPagado{ color:Blue; font-weight:bold; }
-
-table{
-    width:100%;
-    margin-top:10px;
-    border-collapse:collapse;
+.active{
     display:block;
-    overflow-x:auto;
-    white-space:nowrap;
 }
-th{
-    background:#6495ED;
-    color:white;
+input, select, button{
+    padding:10px;
+    margin:5px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+table{
+    border-collapse:collapse;
+    width:100%;
+    margin-top: 10px;
 }
 td, th{
-    border:1px solid #89CFF0;
-    padding:10px;
-    text-align:center;
+    border:1px solid #ccc;
+    padding:8px;
+    text-align: center;
+    font-size: 14px;
 }
+th { background: #eee; }
 
-#balance{
-    font-weight:bold;
-    font-size:18px;
-    color:#00008B;
-    margin-top:10px;
-}
-
-#resumenPedidos{
-    font-weight:bold;
-    margin-bottom:10px;
-}
-
-@media (max-width:600px){
-    nav button{ flex:1 1 100%; }
-    .banner{ height:170px; }
+/* Contenedor para que la tabla no se salga en el celular */
+.table-wrapper {
+    overflow-x: auto;
 }
 </style>
 </head>
-
 <body>
-
-<header class="banner">
-<video autoplay muted loop playsinline>
-<source src="https://i.imgur.com/uHhrx5O.mp4" type="video/mp4">
-</video>
-</header>
 
 <nav>
 <button onclick="mostrar('pedido')">Registrar pedido</button>
@@ -141,294 +68,159 @@ td, th{
 
 <section id="pedido" class="active">
 <h2>Nuevo pedido</h2>
-<input id="cliente" placeholder="Nombre del cliente">
+
+<label>Nombre del Cliente:</label>
+<input id="cliente" placeholder="Cliente">
+
+<label>Teléfono:</label>
+<input id="telefono" placeholder="Teléfono">
+
+<label>Fecha de Entrega:</label>
+<input id="fechaEntrega" type="date">
+
+<label>Producto:</label>
 <select id="producto">
-<option value="8">Concha individual ($8)</option>
+<option value="7">Concha individual ($7)</option>
 <option value="35">Charola 5 ($35)</option>
 </select>
-<input id="cantidad" type="number" step="0.01" placeholder="Cantidad">
-<button onclick="guardarPedido()">Guardar</button>
+
+<label>Cantidad:</label>
+<input id="cantidad" type="number" placeholder="Cantidad piezas">
+
+<button onclick="guardarPedido()" style="background: #ff9800; color: white; border: none; font-weight: bold;">Guardar Pedido</button>
 </section>
 
 <section id="verPedidos">
-<h2>Pedidos Activos</h2>
-
-<p id="resumenPedidos"></p>
-
-<table>
-<thead>
-<tr>
-<th>Cliente</th>
-<th>Total</th>
-<th>Pago</th>
-<th>Acciones</th>
-</tr>
-</thead>
-<tbody id="listaPedidos"></tbody>
-</table>
-
-<h3>Pedidos Realizados</h3>
-<table>
-<thead>
-<tr>
-<th>Cliente</th>
-<th>Total</th>
-<th>Pago</th>
-<th>Regresar</th>
-</tr>
-</thead>
-<tbody id="listaRealizados"></tbody>
-</table>
-
-<button class="papelera" onclick="mostrarPapelera('pedidos')">🗑 Papelera Pedidos</button>
+<h2>Pedidos Registrados</h2>
+<div class="table-wrapper">
+    <table>
+    <thead>
+    <tr>
+    <th>Entrega</th>
+    <th>Cliente</th>
+    <th>Cant.</th>
+    <th>Total</th>
+    </tr>
+    </thead>
+    <tbody id="listaPedidos"></tbody>
+    </table>
+</div>
 </section>
 
 <section id="inventario">
 <h2>Inventario</h2>
-
 <input id="prodNombre" placeholder="Producto">
-<input id="prodCant" type="number" step="0.01" placeholder="Cantidad">
-
-<select id="prodUnidad">
-<option value="kg">Kilogramos</option>
-<option value="g">Gramos</option>
-<option value="ml">Mililitros</option>
-<option value="l">Litros</option>
-<option value="pzas">Piezas</option>
-</select>
-
+<input id="prodCant" type="number" placeholder="Cantidad">
 <button onclick="agregarInventario()">Agregar</button>
-
-<table>
-<thead>
-<tr>
-<th>Producto</th>
-<th>Cantidad</th>
-<th>Unidad</th>
-<th>Acciones</th>
-</tr>
-</thead>
-<tbody id="listaInventario"></tbody>
-</table>
-
-<button class="papelera" onclick="mostrarPapelera('inventario')">🗑 Papelera Inventario</button>
+<ul id="listaInventario"></ul>
 </section>
 
 <section id="finanzas">
 <h2>Finanzas</h2>
-
-<input id="monto" type="number" step="0.01" placeholder="Cantidad">
+<input id="monto" type="number" placeholder="Monto $">
 <select id="tipo">
 <option>Ganancia</option>
 <option>Inversion</option>
 </select>
-<button onclick="agregarMovimiento()">Guardar</button>
-
-<p id="balance"></p>
-
-<h3>Historial</h3>
-<table>
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Monto</th>
-<th>Fecha</th>
-<th>Acciones</th>
-</tr>
-</thead>
-<tbody id="listaMovimientos"></tbody>
-</table>
-
-<button class="papelera" onclick="mostrarPapelera('movimientos')">🗑 Papelera Finanzas</button>
+<button onclick="agregarMovimiento()">Guardar Movimiento</button>
+<p id="balance" style="font-weight: bold; font-size: 1.2em;"></p>
 </section>
 
 <script>
 
 let pedidos = JSON.parse(localStorage.getItem("pedidos")) || []
-let realizados = JSON.parse(localStorage.getItem("realizados")) || []
 let inventario = JSON.parse(localStorage.getItem("inventario")) || []
 let movimientos = JSON.parse(localStorage.getItem("movimientos")) || []
 
-let papelera = JSON.parse(localStorage.getItem("papelera")) || {
-    pedidos:[],
-    realizados:[],
-    inventario:[],
-    movimientos:[]
-}
-
-function guardarStorage(){
-    localStorage.setItem("pedidos",JSON.stringify(pedidos))
-    localStorage.setItem("realizados",JSON.stringify(realizados))
-    localStorage.setItem("inventario",JSON.stringify(inventario))
-    localStorage.setItem("movimientos",JSON.stringify(movimientos))
-    localStorage.setItem("papelera",JSON.stringify(papelera))
-}
-
 function mostrar(id){
-    document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
+    document.querySelectorAll("section").forEach(s=>{
+        s.classList.remove("active")
+    })
     document.getElementById(id).classList.add("active")
     actualizar()
 }
 
 function guardarPedido(){
     let cliente = document.getElementById("cliente").value
-    let precio = parseFloat(document.getElementById("producto").value)
-    let cantidad = parseFloat(document.getElementById("cantidad").value)
-    if(!cliente || !cantidad) return alert("Completa los datos")
+    let fecha = document.getElementById("fechaEntrega").value
+    let precio = document.getElementById("producto").value
+    let cantidad = document.getElementById("cantidad").value
+
+    if(!cliente || !fecha || !cantidad) return alert("Por favor llena todos los campos")
+
     let total = precio * cantidad
-    pedidos.push({cliente,total,pagado:false})
-    guardarStorage()
-    actualizar()
-}
 
-function marcarPagado(index){
-    pedidos[index].pagado = true
-    movimientos.push({
-        monto: pedidos[index].total,
-        tipo:"Ganancia",
-        fecha:new Date().toLocaleString()
+    pedidos.push({
+        cliente,
+        fecha,
+        precio,
+        cantidad,
+        total
     })
-    guardarStorage()
-    actualizar()
-}
 
-function marcarRealizado(index){
-    realizados.push(pedidos[index])
-    pedidos.splice(index,1)
-    guardarStorage()
-    actualizar()
-}
-
-function eliminarPedido(index){
-    papelera.pedidos.push(pedidos[index])
-    pedidos.splice(index,1)
-    guardarStorage()
-    actualizar()
-}
-
-// AQUÍ EL CAMBIO: Ahora en lugar de borrar, lo regresa a la lista de pedidos activos
-function eliminarRealizado(index){
-    pedidos.push(realizados[index])
-    realizados.splice(index,1)
-    guardarStorage()
-    actualizar()
-}
-
-function eliminarInventario(index){
-    papelera.inventario.push(inventario[index])
-    inventario.splice(index,1)
-    guardarStorage()
-    actualizar()
-}
-
-function eliminarMovimiento(index){
-    papelera.movimientos.push(movimientos[index])
-    movimientos.splice(index,1)
-    guardarStorage()
-    actualizar()
-}
-
-function mostrarPapelera(tipo){
-    let items = papelera[tipo]
-    if(items.length===0) return alert("Papelera vacía")
-    let texto="Elementos eliminados:\n"
-    items.forEach((item,i)=> texto+= (i+1)+" - "+JSON.stringify(item)+"\n")
-    let opcion=prompt(texto+"\nEscribe número para restaurar o 'vaciar'")
-    if(opcion==="vaciar"){
-        papelera[tipo]=[]
-    }else{
-        let index=parseInt(opcion)-1
-        if(items[index]){
-            if(tipo==="pedidos") pedidos.push(items[index])
-            if(tipo==="realizados") realizados.push(items[index])
-            if(tipo==="inventario") inventario.push(items[index])
-            if(tipo==="movimientos") movimientos.push(items[index])
-            papelera[tipo].splice(index,1)
-        }
-    }
-    guardarStorage()
+    localStorage.setItem("pedidos", JSON.stringify(pedidos))
+    alert("Pedido guardado con éxito")
+    
+    // Limpiar campos
+    document.getElementById("cliente").value = ""
+    document.getElementById("cantidad").value = ""
+    
     actualizar()
 }
 
 function actualizar(){
-
-    let totalPedidos = pedidos.length
-    let totalDinero = 0
+    // Actualizar Tabla Pedidos
     let tabla=""
+    // Ordenar pedidos por fecha para que veas qué entregar primero
+    pedidos.sort((a,b) => new Date(a.fecha) - new Date(b.fecha));
 
-    pedidos.forEach((p,index)=>{
-        totalDinero += p.total
-        let pago = p.pagado ? 
-        `<span class="pagado">Pagado</span>` : 
-        `<span class="noPagado">No pagado</span>`
-
+    pedidos.forEach(p=>{
         tabla+=`
         <tr>
+        <td>${p.fecha}</td>
         <td>${p.cliente}</td>
-        <td>$${p.total.toFixed(2)}</td>
-        <td>${pago}</td>
-        <td>
-            <button class="btn-mini" onclick="marcarRealizado(${index})">✔</button>
-            <button class="btn-mini" onclick="marcarPagado(${index})">💵</button>
-            <button class="btn-mini" onclick="eliminarPedido(${index})">🗑</button>
-        </td>
-        </tr>`
+        <td>${p.cantidad}</td>
+        <td>$${p.total}</td>
+        </tr>
+        `
     })
-
     document.getElementById("listaPedidos").innerHTML=tabla
-    document.getElementById("resumenPedidos").innerText=
-        "Pedidos activos: " + totalPedidos + 
-        " | Total pendiente: $" + totalDinero.toFixed(2)
 
-    let tablaReal=""
-    realizados.forEach((p,index)=>{
-        let pago = p.pagado ? 
-        `<span class="pagado">Pagado</span>` : 
-        `<span class="noPagado">No pagado</span>`
-
-        tablaReal+=`
-        <tr>
-        <td>${p.cliente}</td>
-        <td>$${p.total.toFixed(2)}</td>
-        <td>${pago}</td>
-        <td><button class="btn-mini" onclick="eliminarRealizado(${index})">↩</button></td>
-        </tr>`
-    })
-    document.getElementById("listaRealizados").innerHTML=tablaReal
-
+    // Actualizar Inventario
     let inv=""
-    inventario.forEach((i,index)=>{
-        inv+=`
-        <tr>
-        <td>${i.nombre}</td>
-        <td>${i.cantidad}</td>
-        <td>${i.unidad}</td>
-        <td>
-            <button class="btn-mini" onclick="eliminarInventario(${index})">🗑</button>
-        </td>
-        </tr>`
+    inventario.forEach(i=>{
+        inv+= `<li>${i.nombre} : ${i.cantidad}</li>`
     })
     document.getElementById("listaInventario").innerHTML=inv
 
+    // Actualizar Finanzas
     let balance=0
-    let movTabla=""
-    movimientos.forEach((m,index)=>{
+    movimientos.forEach(m=>{
         if(m.tipo=="Ganancia") balance+=m.monto
         else balance-=m.monto
-
-        movTabla+=`
-        <tr>
-        <td>${m.tipo}</td>
-        <td>$${m.monto.toFixed(2)}</td>
-        <td>${m.fecha}</td>
-        <td><button class="btn-mini" onclick="eliminarMovimiento(${index})">🗑</button></td>
-        </tr>`
     })
-
-    document.getElementById("balance").innerText="Dinero actual: $"+balance.toFixed(2)
-    document.getElementById("listaMovimientos").innerHTML=movTabla
+    document.getElementById("balance").innerText="Dinero actual: $"+balance
 }
 
+function agregarInventario(){
+    let nombre=document.getElementById("prodNombre").value
+    let cantidad=document.getElementById("prodCant").value
+    if(!nombre || !cantidad) return;
+    inventario.push({ nombre, cantidad })
+    localStorage.setItem("inventario",JSON.stringify(inventario))
+    actualizar()
+}
+
+function agregarMovimiento(){
+    let monto=parseFloat(document.getElementById("monto").value)
+    let tipo=document.getElementById("tipo").value
+    if(!monto) return;
+    movimientos.push({ monto, tipo })
+    localStorage.setItem("movimientos",JSON.stringify(movimientos))
+    actualizar()
+}
+
+// Iniciar
 actualizar()
 
 </script>
